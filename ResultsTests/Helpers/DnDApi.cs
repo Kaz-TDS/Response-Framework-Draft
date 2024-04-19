@@ -6,6 +6,31 @@ namespace ResultsTests.Helpers
 
     public class DnDApi
     {
+        [ErrorResult(errorCode: 1, errorMessage: "No enemy provided")]
+        [ErrorResult(errorCode: 2, errorMessage: "Invalid enemy ArmourClass")]
+        [ErrorResult(errorCode: 3, errorMessage: "What the hell")]
+        public Result AttackTheEnemy(Enemy enemy)
+        {
+            try
+            {
+                if (enemy == null)
+                {
+                    return ResultsFactory.DnDApi.AttackTheEnemy.NoEnemyProvided;
+                }
+
+                if (enemy.ArmourClass < 0)
+                {
+                    return ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourclass;
+                }
+            }
+            catch (Exception e)
+            {
+                return ResultsFactory.DnDApi.AttackTheEnemy.WhatTheHell;
+            }
+            
+            return Result.Success();
+        }
+        
         // [ErrorResult(errorCode: 1,errorMessage: "No enemy provided")]
         // [ErrorResult(errorCode: 2, errorMessage: "Invalid enemy ArmourClass")]
         // public Result<AttackResult> AttackTheEnemy(Enemy enemy)
@@ -35,44 +60,5 @@ namespace ResultsTests.Helpers
         //
         //     return result;
         // }
-
-        [ErrorResult(errorCode: 1, errorMessage: "No enemy provided")]
-        [ErrorResult(errorCode: 2, errorMessage: "Invalid enemy ArmourClass")]
-        [ErrorResult(errorCode: 3, errorMessage: "What the hell")]
-        public Result AttackTheEnemy(Enemy enemy)
-        {
-            try
-            {
-                if (enemy == null)
-                {
-                    return ResultsFactory.DnDApi.AttackTheEnemy.NoEnemyProvided;
-                }
-
-                if (enemy.ArmourClass < 0)
-                {
-                    return ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourclass;
-                }
-            }
-            catch (Exception e)
-            {
-                return ResultsFactory.DnDApi.AttackTheEnemy.WhatTheHell;
-            }
-            
-            return Result.Success();
-        }
-    }
-
-    public class Enemy
-    {
-        public int ArmourClass;
-    }
-
-    public enum AttackResult
-    {
-        Undefined = 0,
-        CriticalMiss = 1,
-        Miss = 2,
-        Hit = 7,
-        CriticalHit = -2
     }
 }
