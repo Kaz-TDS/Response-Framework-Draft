@@ -634,6 +634,19 @@
           "lib/netstandard1.3/System.Collections.Concurrent.dll": {}
         }
       },
+      "System.Collections.Immutable/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/System.Collections.Immutable.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Collections.Immutable.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "System.Console/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -1087,7 +1100,7 @@
           }
         }
       },
-      "System.Reflection.Metadata/1.6.0": {
+      "System.Reflection.Metadata/5.0.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.0/System.Reflection.Metadata.dll": {
@@ -1711,6 +1724,20 @@
         },
         "build": {
           "build/netcoreapp3.1/xunit.runner.visualstudio.props": {}
+        }
+      },
+      "ResultsGenerator/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "dependencies": {
+          "System.Collections.Immutable": "5.0.0",
+          "System.Reflection.Metadata": "5.0.0"
+        },
+        "compile": {
+          "bin/placeholder/ResultsGenerator.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ResultsGenerator.dll": {}
         }
       },
       "ResultsLib/1.0.0": {
@@ -2591,6 +2618,32 @@
         "ref/xamarinwatchos10/_._",
         "system.collections.concurrent.4.3.0.nupkg.sha512",
         "system.collections.concurrent.nuspec"
+      ]
+    },
+    "System.Collections.Immutable/5.0.0": {
+      "sha512": "FXkLXiK0sVVewcso0imKQoOxjoPAj42R8HtjjbSjVPAzwDfzoyoznWxgA3c38LDbN9SJux1xXoXYAhz98j7r2g==",
+      "type": "package",
+      "path": "system.collections.immutable/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.Collections.Immutable.dll",
+        "lib/net461/System.Collections.Immutable.xml",
+        "lib/netstandard1.0/System.Collections.Immutable.dll",
+        "lib/netstandard1.0/System.Collections.Immutable.xml",
+        "lib/netstandard1.3/System.Collections.Immutable.dll",
+        "lib/netstandard1.3/System.Collections.Immutable.xml",
+        "lib/netstandard2.0/System.Collections.Immutable.dll",
+        "lib/netstandard2.0/System.Collections.Immutable.xml",
+        "lib/portable-net45+win8+wp8+wpa81/System.Collections.Immutable.dll",
+        "lib/portable-net45+win8+wp8+wpa81/System.Collections.Immutable.xml",
+        "system.collections.immutable.5.0.0.nupkg.sha512",
+        "system.collections.immutable.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.Console/4.3.0": {
@@ -3971,22 +4024,25 @@
         "system.reflection.extensions.nuspec"
       ]
     },
-    "System.Reflection.Metadata/1.6.0": {
-      "sha512": "COC1aiAJjCoA5GBF+QKL2uLqEBew4JsCkQmoHKbN3TlOZKa2fKLz5CpiRQKDz0RsAOEGsVKqOD5bomsXq/4STQ==",
+    "System.Reflection.Metadata/5.0.0": {
+      "sha512": "5NecZgXktdGg34rh1OenY1rFNDCI8xSjFr+Z4OU4cU06AQHUdRnIIEeWENu3Wl4YowbzkymAIMvi3WyK9U53pQ==",
       "type": "package",
-      "path": "system.reflection.metadata/1.6.0",
+      "path": "system.reflection.metadata/5.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.Reflection.Metadata.dll",
+        "lib/net461/System.Reflection.Metadata.xml",
         "lib/netstandard1.1/System.Reflection.Metadata.dll",
         "lib/netstandard1.1/System.Reflection.Metadata.xml",
         "lib/netstandard2.0/System.Reflection.Metadata.dll",
         "lib/netstandard2.0/System.Reflection.Metadata.xml",
         "lib/portable-net45+win8/System.Reflection.Metadata.dll",
         "lib/portable-net45+win8/System.Reflection.Metadata.xml",
-        "system.reflection.metadata.1.6.0.nupkg.sha512",
+        "system.reflection.metadata.5.0.0.nupkg.sha512",
         "system.reflection.metadata.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
@@ -5517,6 +5573,11 @@
         "xunit.runner.visualstudio.nuspec"
       ]
     },
+    "ResultsGenerator/1.0.0": {
+      "type": "project",
+      "path": "../ResultsGenerator/ResultsGenerator.csproj",
+      "msbuildProject": "../ResultsGenerator/ResultsGenerator.csproj"
+    },
     "ResultsLib/1.0.0": {
       "type": "project",
       "path": "../ResultsLib/ResultsLib.csproj",
@@ -5526,6 +5587,7 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "Microsoft.NET.Test.Sdk >= 17.5.0",
+      "ResultsGenerator >= 1.0.0",
       "ResultsLib >= 1.0.0",
       "coverlet.collector >= 3.2.0",
       "xunit >= 2.4.2",
@@ -5538,11 +5600,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/ResultsTests.csproj",
+      "projectUniqueName": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/ResultsTests.csproj",
       "projectName": "ResultsTests",
-      "projectPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/ResultsTests.csproj",
+      "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/ResultsTests.csproj",
       "packagesPath": "/Users/kaz-tds/.nuget/packages/",
-      "outputPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/obj/",
+      "outputPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/kaz-tds/.nuget/NuGet/NuGet.Config"
@@ -5557,8 +5619,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj": {
-              "projectPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj"
+            "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/ResultsGenerator.csproj": {
+              "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/ResultsGenerator.csproj"
+            },
+            "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj": {
+              "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj"
             }
           }
         }

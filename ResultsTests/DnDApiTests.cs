@@ -1,22 +1,16 @@
 using ResultsTests.Helpers;
 
-namespace ResultsTests;
-
-public class DndApiTests
+namespace ResultsTests
 {
-    [Fact]
-    public void Test1()
+    public class DndApiTests
     {
-        var dndapi = new DnDApi();
-        if (dndapi.AttackTheEnemy(default))
+        [Fact]
+        public void Test1()
         {
-            
-        }
-
-        var result = dndapi.AttackTheEnemy(new Enemy());
-        switch (result.ErrorCode)
-        {
-            
+            var dndapi = new DnDApi();
+            var result = dndapi.AttackTheEnemy(null);
+            Assert.False(result.Succeeded);
+            Assert.Equal(1, result.ErrorCode);
         }
     }
 }

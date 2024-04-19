@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj",
+      "projectUniqueName": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj",
       "projectName": "ResultsLib",
-      "projectPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj",
+      "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj",
       "packagesPath": "/Users/kaz-tds/.nuget/packages/",
-      "outputPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/",
+      "outputPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/kaz-tds/.nuget/NuGet/NuGet.Config"

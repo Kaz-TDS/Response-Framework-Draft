@@ -2,15 +2,17 @@ namespace TDS.ResultsGenerator
 {
     public readonly struct GeneratorData
     {
-        public readonly string NamespaceName;
-        public readonly string ContainingTypeName;
+        public readonly string MetadataName;
+        public readonly string ClassNamespace;
+        public readonly string ClassName;
         public readonly string MethodName;
 
-        public string CombinedName => $"{ContainingTypeName}.{MethodName}";
-        public GeneratorData(string namespaceName, string containingTypeName, string methodName)
+        public string CombinedName => $"{MetadataName}.{MethodName}";
+        public GeneratorData(string metadataName, string classNamespace, string className, string methodName)
         {
-            NamespaceName = namespaceName;
-            ContainingTypeName = containingTypeName;
+            MetadataName = metadataName;
+            ClassNamespace = classNamespace;
+            ClassName = className;
             MethodName = methodName;
         }
     }

@@ -14,6 +14,11 @@ public readonly struct Result
 
     public static Result Success()
         => new() {Succeeded = true, ErrorCode = -1, ErrorMessage = String.Empty };
+    
+    public override string ToString()
+    {
+        return $"Result - {Succeeded}, ErrorCode - {ErrorCode}";
+    }
 }
 
 public readonly struct Result<T>

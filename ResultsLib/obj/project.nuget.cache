@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qCjU9R+4XbGeZPrhjQNzsSUyiuibAsX95lrR6uLr4n4P3b6QuB+jfXia1y/tZOsX3JWLlYtfNcVDOIF3O8ekSw==",
+  "dgSpecHash": "ge7n/8yzyrHGEP013AdiWD/v1AUzi2SZcbUAE54rE4DHbHzkAy9F9tJLhPVsmAjAzLxo5PqF0O3SkOLg5SA9mA==",
   "success": true,
-  "projectFilePath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj",
+  "projectFilePath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

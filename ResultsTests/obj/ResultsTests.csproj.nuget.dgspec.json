@@ -1,17 +1,91 @@
 {
   "format": 1,
   "restore": {
-    "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/ResultsTests.csproj": {}
+    "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/ResultsTests.csproj": {}
   },
   "projects": {
-    "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj": {
+    "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/ResultsGenerator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj",
-        "projectName": "ResultsLib",
-        "projectPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj",
+        "projectUniqueName": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/ResultsGenerator.csproj",
+        "projectName": "ResultsGenerator",
+        "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/ResultsGenerator.csproj",
         "packagesPath": "/Users/kaz-tds/.nuget/packages/",
-        "outputPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/",
+        "outputPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/kaz-tds/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.Analyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.CodeAnalysis.CSharp": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.8.0-3.final, )"
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            },
+            "System.Collections.Immutable": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Reflection.Metadata": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.306/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj",
+        "projectName": "ResultsLib",
+        "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj",
+        "packagesPath": "/Users/kaz-tds/.nuget/packages/",
+        "outputPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/kaz-tds/.nuget/NuGet/NuGet.Config"
@@ -57,14 +131,14 @@
         }
       }
     },
-    "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/ResultsTests.csproj": {
+    "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/ResultsTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/ResultsTests.csproj",
+        "projectUniqueName": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/ResultsTests.csproj",
         "projectName": "ResultsTests",
-        "projectPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/ResultsTests.csproj",
+        "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/ResultsTests.csproj",
         "packagesPath": "/Users/kaz-tds/.nuget/packages/",
-        "outputPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsTests/obj/",
+        "outputPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsTests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/kaz-tds/.nuget/NuGet/NuGet.Config"
@@ -79,8 +153,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj": {
-                "projectPath": "/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/ResultsLib.csproj"
+              "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/ResultsGenerator.csproj": {
+                "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsGenerator/ResultsGenerator.csproj"
+              },
+              "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj": {
+                "projectPath": "/Users/kaz-tds/Projects/Response-Framework-Draft/ResultsLib/ResultsLib.csproj"
               }
             }
           }

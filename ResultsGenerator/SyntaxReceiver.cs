@@ -10,19 +10,20 @@ namespace TDS.ResultsGenerator
     public class SyntaxReceiver : ISyntaxReceiver
     {
         public readonly List<GeneratorData> DataTypesToGenerate = new List<GeneratorData>();
+        public readonly List<string> MethodsInspected = new List<string>();
 
         public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
         {
             if (!(syntaxNode is MethodDeclarationSyntax methodDeclarationSyntax)) return;
-
+            
             if (IsErrorResultDefinition(methodDeclarationSyntax))
             {
-                var domainFullName = GetContainingTypeFullName(methodDeclarationSyntax);
-                var namespaceName = GetNodeContainingNamespace(methodDeclarationSyntax);
+                MethodsInspected.Add($"Error-{methodDeclarationSyntax.Identifier.Text}");
                 DataTypesToGenerate.Add(
                     new GeneratorData(
-                        namespaceName: namespaceName,
-                        containingTypeName: domainFullName,
+                        metadataName: GetContainingTypeFullName(methodDeclarationSyntax),
+                        classNamespace: GetNodeContainingNamespace(methodDeclarationSyntax),
+                        className: GetNodeContainingClassName(methodDeclarationSyntax),
                         methodName: methodDeclarationSyntax.Identifier.Text));
             }
         }
@@ -43,6 +44,21 @@ namespace TDS.ResultsGenerator
                 {
                     return namespaceNode.Name.ToString();
                 }
+                currentNode = currentNode.Parent;
+            }
+            return String.Empty;
+        }
+
+        private static string GetNodeContainingClassName(SyntaxNode node)
+        {
+            var currentNode = node;
+            while (currentNode != null)
+            {
+                if (currentNode is BaseTypeDeclarationSyntax baseTypeNode)
+                {
+                    return baseTypeNode.Identifier.Text;
+                }
+
                 currentNode = currentNode.Parent;
             }
             return String.Empty;

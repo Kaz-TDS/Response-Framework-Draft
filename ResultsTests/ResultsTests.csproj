@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ResultsGenerator\ResultsGenerator.csproj" OutputItemType="Analyzer"/>
     <ProjectReference Include="..\ResultsLib\ResultsLib.csproj" />
   </ItemGroup>
 

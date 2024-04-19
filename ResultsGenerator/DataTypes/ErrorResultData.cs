@@ -4,16 +4,16 @@ namespace TDS.ResultsGenerator
 {
     public class ErrorResultData
     {
-        public string NamespaceName { get; private set; }
-        public string ShortName { get; private set; }
-        public string MethodName { get; private set; }
-        public List<(int errorCode, string errorMessage)> Errors;
+        public readonly string ClassNamespace;
+        public readonly string ClassName;
+        public readonly string MethodName;
+        public readonly List<(int errorCode, string errorMessage)> Errors;
 
-        public ErrorResultData(string namespaceName, string shortName, string methodName, List<(int errorCode, string errorMessage)> errors)
+        public ErrorResultData(GeneratorData generatorData, List<(int errorCode, string errorMessage)> errors)
         {
-            NamespaceName = namespaceName;
-            ShortName = shortName;
-            MethodName = methodName;
+            ClassNamespace = generatorData.ClassNamespace;
+            ClassName = generatorData.ClassName;
+            MethodName = generatorData.MethodName;
             Errors = errors;
         }
     }
