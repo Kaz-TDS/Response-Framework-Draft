@@ -1,0 +1,12 @@
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/bin/Debug/net7.0/ResultsLib.deps.json
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/bin/Debug/net7.0/ResultsLib.dll
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/bin/Debug/net7.0/ResultsLib.pdb
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ResultsLib.csproj.AssemblyReference.cache
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ResultsLib.GeneratedMSBuildEditorConfig.editorconfig
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ResultsLib.AssemblyInfoInputs.cache
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ResultsLib.AssemblyInfo.cs
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ResultsLib.csproj.CoreCompileInputs.cache
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ResultsLib.dll
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/refint/ResultsLib.dll
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ResultsLib.pdb
+/Users/kaz-tds/Projects/ResultsFramework/ResultsLib/obj/Debug/net7.0/ref/ResultsLib.dll
