@@ -60,7 +60,7 @@ namespace ResultsTests
         [Fact]
         public void When_Enemy_With_Negative_ArmourClass_Provided_AttackEnemy_Should_Fail_With_Correct_ErrorCode()
         {
-            Assert.False(_api.AttackTheEnemy(_invalidArmourEnemy).ErrorCode ==
+            Assert.True(_api.AttackTheEnemy(_invalidArmourEnemy).ErrorCode ==
                          ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourclassErrorCode);
         }
 

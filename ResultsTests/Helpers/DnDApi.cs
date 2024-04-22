@@ -35,7 +35,7 @@ namespace ResultsTests.Helpers
             
             if (enemy.ArmourClass < 0)
             {
-                return ResultsFactory.DnDApi.AttackTheEnemy.WhatTheHell(AttackResult.Miss);
+                return ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourclass(AttackResult.Miss);
             }
 
             var rollResult = _die.Roll();
