@@ -1,6 +1,6 @@
 namespace TDS.ResultsGenerator
 {
-    public readonly struct GeneratorData
+    public readonly struct SyntaxReceivedData
     {
         public readonly string MetadataName;
         public readonly string ClassNamespace;
@@ -8,7 +8,7 @@ namespace TDS.ResultsGenerator
         public readonly string MethodName;
 
         public string CombinedName => $"{MetadataName}.{MethodName}";
-        public GeneratorData(string metadataName, string classNamespace, string className, string methodName)
+        public SyntaxReceivedData(string metadataName, string classNamespace, string className, string methodName)
         {
             MetadataName = metadataName;
             ClassNamespace = classNamespace;

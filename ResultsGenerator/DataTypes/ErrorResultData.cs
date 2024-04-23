@@ -17,13 +17,13 @@ namespace TDS.ResultsGenerator
         public string ErrorRepositoryUid => $"{ClassNamespace}_{ClassName}_ErrorRepository";
         public string ClassErrorsProviderUid => $"{ClassNamespace}_{ClassName}_{MethodName}_ErrorsProvider";
 
-        public ErrorResultData(GeneratorData generatorData,
+        public ErrorResultData(SyntaxReceivedData syntaxReceivedData,
             List<(int errorCode, string errorMessage)> errors,
             bool isGeneric = false, string returnTypeName = default)
         {
-            ClassNamespace = generatorData.ClassNamespace;
-            ClassName = generatorData.ClassName;
-            MethodName = generatorData.MethodName;
+            ClassNamespace = syntaxReceivedData.ClassNamespace;
+            ClassName = syntaxReceivedData.ClassName;
+            MethodName = syntaxReceivedData.MethodName;
             Errors = errors;
             IsGeneric = isGeneric;
             ReturnTypeName = returnTypeName;

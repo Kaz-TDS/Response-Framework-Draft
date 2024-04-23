@@ -46,7 +46,7 @@ namespace TDS.ResultsGenerator
                      debug.AppendLine($"CombinedName - {generatorData.CombinedName} - Members Count = {members.Length}");
                      foreach (var member in members)
                      {
-                         debug.AppendLine($"MemberName - {member.Name}");
+                         debug.AppendLine($"Member {Enum.GetName(typeof(SymbolKind), member.Kind)} - {member.Name}");
                          if (string.CompareOrdinal(member.Name, generatorData.MethodName) == 0)
                          {
                              debug.AppendLine($"{member.Name} Found");

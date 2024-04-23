@@ -9,10 +9,10 @@ namespace ResultsTests
         private readonly DnDApi _api;
         private readonly Enemy _invalidArmourEnemy = new() { ArmourClass = -1 };
         private readonly Enemy _validEnemy = new() { ArmourClass = 20 };
+        private ResultsGenerator_DebugData _debugData = new();
 
         public DnDApiTests()
         {
-            ResultsGenerator_DebugData a;
             _d20 = Substitute.For<ID20>();
             _api = new DnDApi(_d20);
         }
