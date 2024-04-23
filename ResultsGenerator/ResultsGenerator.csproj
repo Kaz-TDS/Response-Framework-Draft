@@ -19,7 +19,7 @@
 
     <Copy
             SourceFiles="$(TargetDir)$(ProjectName).dll"
-            DestinationFolder="$(TargetDir)\..\..\..\..\SignalsGenerator_Package\Assets\SignalsGenerator" />
+            DestinationFolder="$(TargetDir)\..\..\..\..\ResultsGenerator_Package\Assets\ResultsGenerator" />
 
     <Message Text="Copied build files" Importance="High" />
   </Target>

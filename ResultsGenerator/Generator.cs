@@ -139,7 +139,7 @@ namespace TDS.ResultsGenerator
                                        Response = response
                                    }};";
                                 var errorCodeProperty = $@"
-                                public readonly int {pascalCaseErrorMessage}ErrorCode = {error.errorCode};
+                                public readonly int {pascalCaseErrorMessage} = {error.errorCode};
                                 ";
                                 errorCodeBuilder.AppendLine(errorCodeProperty);
                                 debugResultsBuilder.AppendLine(debugProperty);
@@ -229,7 +229,7 @@ namespace TDS.ResultsGenerator
 
             namespace {data.ClassNamespace}
             {{
-                public static partial class ErrorRepository
+                public static partial class ErrorCodeRepository
                 {{
                     public static {data.ClassName}ErrorsProvider {data.ClassName} => new();
                 }}
