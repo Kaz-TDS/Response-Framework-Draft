@@ -14,6 +14,8 @@ namespace TDS.ResultsGenerator
 
         public string ResultsFactoryUid => $"{ClassNamespace}_{ClassName}";
         public string ErrorsFactoryUid => $"{ClassNamespace}_{ClassName}_{MethodName}";
+        public string ErrorRepositoryUid => $"{ClassNamespace}_{ClassName}_ErrorRepository";
+        public string ClassErrorsProviderUid => $"{ClassNamespace}_{ClassName}_{MethodName}_ErrorsProvider";
 
         public ErrorResultData(GeneratorData generatorData,
             List<(int errorCode, string errorMessage)> errors,

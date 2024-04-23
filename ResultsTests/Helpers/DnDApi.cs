@@ -3,7 +3,6 @@ using TDS.Results;
 
 namespace ResultsTests.Helpers
 {
-
     public class DnDApi
     {
         private readonly ID20 _die;
@@ -24,7 +23,7 @@ namespace ResultsTests.Helpers
         }
 
         [ErrorResult(errorCode: 1, errorMessage: "No enemy provided")]
-        [ErrorResult(errorCode: 2, errorMessage: "Invalid enemy ArmourClass")]
+        [ErrorResult(errorCode: 2, errorMessage: "Invalid enemy Armour Class")]
         [ErrorResult(errorCode: 3, errorMessage: "What the hell")]
         public Result<AttackResult> AttackTheEnemy(Enemy enemy)
         {
@@ -35,7 +34,7 @@ namespace ResultsTests.Helpers
             
             if (enemy.ArmourClass < 0)
             {
-                return ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourclass(AttackResult.Miss);
+                return ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourClass(AttackResult.Miss);
             }
 
             var rollResult = _die.Roll();
@@ -56,7 +55,6 @@ namespace ResultsTests.Helpers
     public class Enemy
     {
         public int ArmourClass;
-        public int Distance;
     }
 
     public enum AttackResult

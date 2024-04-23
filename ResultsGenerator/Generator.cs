@@ -26,6 +26,8 @@ namespace TDS.ResultsGenerator
             
             var generatedResultsFactories = new HashSet<string>();
             var generatedErrorsFactories = new HashSet<string>();
+            var generatedErrorRepositories = new HashSet<string>();
+            var generatedClassErrorProviders = new HashSet<string>();
             
             var debug = new StringBuilder();
 
@@ -39,8 +41,6 @@ namespace TDS.ResultsGenerator
                      var members = typeSymbol.GetMembers();
                      var errors = new List<(int errorCode, string errorMessage)>();
                      IMethodSymbol method = null;
-                     var isGeneric = false;
-                     var returnValueType = String.Empty;
 
                      debug.AppendLine("");
                      debug.AppendLine($"CombinedName - {generatorData.CombinedName} - Members Count = {members.Length}");
@@ -68,8 +68,10 @@ namespace TDS.ResultsGenerator
                              }
                          }
                      }
+
                      var returnType = method.ReturnType as INamedTypeSymbol;
-                     isGeneric = returnType.IsGenericType;
+                     var isGeneric = returnType.IsGenericType;
+                     var returnValueType = String.Empty;
                      if (isGeneric)
                      {
                          returnValueType = GetFullTypeName(returnType.TypeArguments[0]);
@@ -84,7 +86,6 @@ namespace TDS.ResultsGenerator
              {
                 if (errorsToGenerate.Count > 0)
                 {
-                    var resultFactoryBuilder = new StringBuilder();
                     foreach (var result in errorsToGenerate)
                     {
                         var errorResultData = result.Value;
@@ -147,12 +148,15 @@ namespace TDS.ResultsGenerator
                         }
 
                         GenerateResultsFactory(errorResultData, ref generatedResultsFactories, context);
+                        GenerateErrorRepository(errorResultData, ref generatedErrorRepositories, context);
                         GenerateErrorsFactory(errorResultData, ref generatedErrorsFactories, context);
+                        GenerateClassErrorProvider(errorResultData, ref generatedClassErrorProviders, context);
                         GenerateErrors(errorResultData,
                             errorCodeBuilder,
                             debugResultsBuilder,
                             releaseResultsBuilder,
                             context);
+                        GenerateMethodErrors(errorResultData, errorCodeBuilder, context);
                     }
                 }
              }
@@ -175,6 +179,69 @@ namespace TDS.ResultsGenerator
             syntaxReceiver.DataTypesToGenerate.Clear();
         }
 
+        private void GenerateMethodErrors(ErrorResultData data, StringBuilder errorCodes, GeneratorExecutionContext context)
+        {
+            var resultsClass = $@"
+            using TDS.Results;
+
+            namespace {data.ClassNamespace}
+            {{
+               public class {data.MethodName}ErrorCodes
+               {{
+                   {errorCodes}
+               }}
+            }}
+            ";
+            var fileName = $"Gen_{data.ClassNamespace}_{data.ClassName}_{data.MethodName}_ErrorCodes";
+            FormattedFileWriter.WriteSourceFile(context: context,
+                sourceText: resultsClass,
+                fileName: fileName);
+        }
+
+        private void GenerateClassErrorProvider(ErrorResultData data, ref HashSet<string> generatedErrorProviders, GeneratorExecutionContext context)
+        {
+            if(generatedErrorProviders.Contains(data.ClassErrorsProviderUid)) return;
+            
+            var errorsFactory = $@"
+            using TDS.Results;
+
+            namespace {data.ClassNamespace}
+            {{
+                public partial class {data.ClassName}ErrorsProvider
+                {{
+                    public {data.MethodName}ErrorCodes {data.MethodName} => new();
+                }}
+            }}";
+            
+            FormattedFileWriter.WriteSourceFile(context: context,
+                sourceText: errorsFactory,
+                fileName: $"Gen_{data.ClassErrorsProviderUid}");
+
+            generatedErrorProviders.Add(data.ClassErrorsProviderUid);
+        }
+
+        private void GenerateErrorRepository(ErrorResultData data, ref HashSet<string> generatedRepositories, GeneratorExecutionContext context)
+        {
+            if(generatedRepositories.Contains(data.ErrorRepositoryUid)) return;
+            
+            var resultsFactory = $@"
+            using TDS.Results;
+
+            namespace {data.ClassNamespace}
+            {{
+                public static partial class ErrorRepository
+                {{
+                    public static {data.ClassName}ErrorsProvider {data.ClassName} => new();
+                }}
+            }}";
+            
+            FormattedFileWriter.WriteSourceFile(context: context,
+                sourceText: resultsFactory,
+                fileName: $"Gen_{data.ErrorRepositoryUid}");
+
+            generatedRepositories.Add(data.ErrorRepositoryUid);
+        }
+
         private void GenerateErrors(ErrorResultData data,
             StringBuilder errorCodes,
             StringBuilder debugErrors,
@@ -191,20 +258,18 @@ namespace TDS.ResultsGenerator
                
                public class {data.MethodName}Errors
                {{
-                   {errorCodes}
                    {debugErrors}
                }}
             #else
 
                public class {data.MethodName}Errors
                {{
-                   {errorCodes}
                    {releaseErrors}
                }}
             #endif
             }}
             ";
-            var fileName = $"Gen_{data.ClassNamespace}_{data.ClassName}_{data.MethodName}Errors";
+            var fileName = $"Gen_{data.ClassNamespace}_{data.ClassName}_{data.MethodName}_Errors";
             FormattedFileWriter.WriteSourceFile(context: context,
                 sourceText: resultsClass,
                 fileName: fileName);

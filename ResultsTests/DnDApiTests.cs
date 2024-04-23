@@ -7,8 +7,8 @@ namespace ResultsTests
     {
         private readonly ID20 _d20;
         private readonly DnDApi _api;
-        private readonly Enemy _invalidArmourEnemy = new() { ArmourClass = -1, Distance = 5 };
-        private readonly Enemy _validEnemy = new() { ArmourClass = 20, Distance = 5 };
+        private readonly Enemy _invalidArmourEnemy = new() { ArmourClass = -1 };
+        private readonly Enemy _validEnemy = new() { ArmourClass = 20 };
 
         public DnDApiTests()
         {
@@ -20,7 +20,6 @@ namespace ResultsTests
         public void When_Enemy_Provided_CanAttack_Should_Succeed()
         {
             var enemy = new Enemy();
-            
             Assert.True(_api.CanAttackEnemy(enemy));
         }
 
@@ -35,7 +34,7 @@ namespace ResultsTests
         {
             Assert.True(
                 _api.CanAttackEnemy(null).ErrorCode == 
-                ResultsFactory.DnDApi.CanAttackEnemy.NoEnemyProvidedErrorCode);
+                ErrorRepository.DnDApi.CanAttackEnemy.NoEnemyProvidedErrorCode);
         }
 
         [Fact]
@@ -48,7 +47,7 @@ namespace ResultsTests
         public void When_Null_Provided_AttackEnemy_Should_Fail_With_Correct_ErrorCode()
         {
             Assert.True(_api.AttackTheEnemy(null).ErrorCode ==
-                        ResultsFactory.DnDApi.AttackTheEnemy.NoEnemyProvidedErrorCode);
+                        ErrorRepository.DnDApi.AttackTheEnemy.NoEnemyProvidedErrorCode);
         }
 
         [Fact]
@@ -61,7 +60,7 @@ namespace ResultsTests
         public void When_Enemy_With_Negative_ArmourClass_Provided_AttackEnemy_Should_Fail_With_Correct_ErrorCode()
         {
             Assert.True(_api.AttackTheEnemy(_invalidArmourEnemy).ErrorCode ==
-                         ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourclassErrorCode);
+                         ErrorRepository.DnDApi.AttackTheEnemy.InvalidEnemyArmourClassErrorCode);
         }
 
         [Fact]
