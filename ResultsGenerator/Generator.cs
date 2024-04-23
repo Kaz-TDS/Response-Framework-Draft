@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using TDS.ResultsGenerator.Utils;
@@ -31,59 +32,36 @@ namespace TDS.ResultsGenerator
             
             var debug = new StringBuilder();
 
-             try
-             {
-                 foreach (var generatorData in syntaxReceiver.DataTypesToGenerate)
-                 {
-                     var typeSymbol = context.Compilation.GetTypeByMetadataName(generatorData.MetadataName);
-                     if (typeSymbol is null || errorsToGenerate.ContainsKey(generatorData.CombinedName)) continue;
+            try
+            {
+                foreach (var generatorData in syntaxReceiver.DataTypesToGenerate)
+                {
+                    var typeSymbol = context.Compilation.GetTypeByMetadataName(generatorData.MetadataName);
+                    if (typeSymbol is null || errorsToGenerate.ContainsKey(generatorData.CombinedName)) continue;
 
-                     var members = typeSymbol.GetMembers();
-                     var errors = new List<(int errorCode, string errorMessage)>();
-                     IMethodSymbol method = null;
+                    var members = typeSymbol.GetMembers();
+                    var errors =
+                        BuildErrorList(debug, generatorData, members, out var method);
 
-                     debug.AppendLine("");
-                     debug.AppendLine($"CombinedName - {generatorData.CombinedName} - Members Count = {members.Length}");
-                     foreach (var member in members)
-                     {
-                         debug.AppendLine($"Member {Enum.GetName(typeof(SymbolKind), member.Kind)} - {member.Name}");
-                         if (string.CompareOrdinal(member.Name, generatorData.MethodName) == 0)
-                         {
-                             debug.AppendLine($"{member.Name} Found");
-                             method = member as IMethodSymbol;
-                             var attributes = member.GetAttributes();
-                             foreach (var attribute in attributes)
-                             {
-                                 debug.AppendLine($"Attribute {attribute.ToString()}");
-                                 if (AttributeUtils.IsErrorResultAttribute(attribute))
-                                 {
-                                    var arguments = attribute.ConstructorArguments;
-                                    if(arguments.Length == 2)
-                                    { 
-                                        errors.Add(
-                                            (errorCode: int.Parse(arguments[0].Value.ToString()),
-                                            errorMessage: arguments[1].Value.ToString()));
-                                    }
-                                 }
-                             }
-                         }
-                     }
+                    var returnType = (INamedTypeSymbol)method.ReturnType;
+                    var isGeneric = returnType.IsGenericType;
+                    var returnValueType = String.Empty;
+                    if (isGeneric)
+                    {
+                        returnValueType = GetFullTypeName(returnType.TypeArguments[0]);
+                        debug.AppendLine($"Generic return - {returnValueType}");
+                    }
 
-                     var returnType = method.ReturnType as INamedTypeSymbol;
-                     var isGeneric = returnType.IsGenericType;
-                     var returnValueType = String.Empty;
-                     if (isGeneric)
-                     {
-                         returnValueType = GetFullTypeName(returnType.TypeArguments[0]);
-                         debug.AppendLine($"Generic return - {returnValueType}");
-                     }
-                     
-                     errorsToGenerate.Add(generatorData.CombinedName,
-                         new ErrorResultData(generatorData,errors, isGeneric, returnValueType));
-                 }
-             }
-             finally
-             {
+                    errorsToGenerate.Add(generatorData.CombinedName,
+                        new ErrorResultData(generatorData, errors, isGeneric, returnValueType));
+                }
+            }
+            catch (Exception e)
+            {
+                debug.AppendLine($"Caught an exception while processing methods - {e.Message}");
+            }
+            finally
+            {
                 if (errorsToGenerate.Count > 0)
                 {
                     foreach (var result in errorsToGenerate)
@@ -127,14 +105,14 @@ namespace TDS.ResultsGenerator
                             debugResultsBuilder,
                             releaseResultsBuilder,
                             context);
-                        GenerateErrorRepository(errorResultData, ref generatedErrorRepositories, context);
-                        GenerateClassErrorProvider(errorResultData, ref generatedClassErrorProviders, context);
-                        GenerateMethodErrors(errorResultData, errorCodeBuilder, context);
+                        ErrorCodeUtils.GenerateErrorRepository(errorResultData, ref generatedErrorRepositories, context);
+                        ErrorCodeUtils.GenerateClassErrorProvider(errorResultData, ref generatedClassErrorProviders, context);
+                        ErrorCodeUtils.GenerateMethodErrors(errorResultData, errorCodeBuilder, context);
                     }
                 }
-             }
+            }
 
-            var stats = $@"
+            var debugData = $@"
             public class ResultsGenerator_DebugData
             {{
 /* 
@@ -144,76 +122,52 @@ namespace TDS.ResultsGenerator
             ";
             
             FormattedFileWriter.WriteSourceFile(context: context,
-                sourceText: stats,
+                sourceText: debugData,
                 fileName: $"Generated_Stats");
             
             syntaxReceiver.DataTypesToGenerate.Clear();
         }
 
-        private void GenerateMethodErrors(ErrorResultData data, StringBuilder errorCodes, GeneratorExecutionContext context)
+        private static List<(int errorCode, string errorMessage)> BuildErrorList(
+            StringBuilder debug,
+            SyntaxReceivedData generatorData,
+            ImmutableArray<ISymbol> members,
+            out IMethodSymbol method)
         {
-            var resultsClass = $@"
-            using TDS.Results;
+            var errors = new List<(int errorCode, string errorMessage)>();
+            method = null;
 
-            namespace {data.ClassNamespace}
-            {{
-               public class {data.MethodName}ErrorCodes
-               {{
-                   {errorCodes}
-               }}
-            }}
-            ";
-            var fileName = $"Gen_{data.ClassNamespace}_{data.ClassName}_{data.MethodName}_ErrorCodes";
-            FormattedFileWriter.WriteSourceFile(context: context,
-                sourceText: resultsClass,
-                fileName: fileName);
+            debug.AppendLine("");
+            debug.AppendLine($"CombinedName - {generatorData.CombinedName} - Members Count = {members.Length}");
+            foreach (var member in members)
+            {
+                debug.AppendLine($"Member {Enum.GetName(typeof(SymbolKind), member.Kind)} - {member.Name}");
+                if (string.CompareOrdinal(member.Name, generatorData.MethodName) == 0)
+                {
+                    debug.AppendLine($"{member.Name} Found");
+                    method = member as IMethodSymbol;
+                    var attributes = member.GetAttributes();
+                    foreach (var attribute in attributes)
+                    {
+                        debug.AppendLine($"Attribute {attribute.ToString()}");
+                        if (AttributeUtils.IsErrorResultAttribute(attribute))
+                        {
+                            var arguments = attribute.ConstructorArguments;
+                            if(arguments.Length == 2)
+                            { 
+                                errors.Add(
+                                    (errorCode: int.Parse(arguments[0].Value.ToString()),
+                                        errorMessage: arguments[1].Value.ToString()));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return errors;
         }
 
-        private void GenerateClassErrorProvider(ErrorResultData data, ref HashSet<string> generatedErrorProviders, GeneratorExecutionContext context)
-        {
-            if(generatedErrorProviders.Contains(data.ClassErrorsProviderUid)) return;
-            
-            var errorsFactory = $@"
-            using TDS.Results;
-
-            namespace {data.ClassNamespace}
-            {{
-                public partial class {data.ClassName}ErrorsProvider
-                {{
-                    public {data.MethodName}ErrorCodes {data.MethodName} => new();
-                }}
-            }}";
-            
-            FormattedFileWriter.WriteSourceFile(context: context,
-                sourceText: errorsFactory,
-                fileName: $"Gen_{data.ClassErrorsProviderUid}");
-
-            generatedErrorProviders.Add(data.ClassErrorsProviderUid);
-        }
-
-        private void GenerateErrorRepository(ErrorResultData data, ref HashSet<string> generatedRepositories, GeneratorExecutionContext context)
-        {
-            if(generatedRepositories.Contains(data.ErrorRepositoryUid)) return;
-            
-            var resultsFactory = $@"
-            using TDS.Results;
-
-            namespace {data.ClassNamespace}
-            {{
-                public static partial class ErrorCodeRepository
-                {{
-                    public static {data.ClassName}ErrorsProvider {data.ClassName} => new();
-                }}
-            }}";
-            
-            FormattedFileWriter.WriteSourceFile(context: context,
-                sourceText: resultsFactory,
-                fileName: $"Gen_{data.ErrorRepositoryUid}");
-
-            generatedRepositories.Add(data.ErrorRepositoryUid);
-        }
-
-        private string GetFullTypeName(ITypeSymbol symbol)
+        private static string GetFullTypeName(ITypeSymbol symbol)
         {
             var output = symbol.Name;
             if(symbol.ContainingType != null)
