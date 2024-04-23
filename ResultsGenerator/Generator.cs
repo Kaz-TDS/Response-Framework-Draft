@@ -96,76 +96,47 @@ namespace TDS.ResultsGenerator
                         {
                             var pascalCaseErrorMessage = StringTools.ToPascalCase(error.errorMessage);
                             debug.AppendLine($"Generating {pascalCaseErrorMessage} - is generic -> {errorResultData.IsGeneric}");
+                            
                             if (!errorResultData.IsGeneric)
                             {
-                                var debugProperty = $@"
-                               public Result {pascalCaseErrorMessage}
-                                   => new()
-                                   {{
-                                       Succeeded = false, ErrorCode = {error.errorCode},
-                                       ErrorMessage = ""{error.errorMessage}"",
-                                   }};";
-                                var releaseProperty = $@"
-                               public Result {pascalCaseErrorMessage}
-                                   => new()
-                                   {{
-                                       Succeeded = false,
-                                       ErrorCode = {error.errorCode},
-                                   }};";
-                                var errorCodeProperty = $@"
-                                public readonly int {pascalCaseErrorMessage}ErrorCode = {error.errorCode};
-                                ";
-                                errorCodeBuilder.AppendLine(errorCodeProperty);
+                                var debugProperty = ErrorResultsUtils.GenerateSimpleDebugErrorResult(pascalCaseErrorMessage, error);
                                 debugResultsBuilder.AppendLine(debugProperty);
+                                
+                                var releaseProperty = ErrorResultsUtils.GenerateSimpleReleaseErrorResult(pascalCaseErrorMessage, error);
                                 releaseResultsBuilder.AppendLine(releaseProperty);
                             }
                             else
                             {
                                 var genericType = errorResultData.ReturnTypeName;
-                                var debugProperty = $@"
-                               public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response)
-                                   => new()
-                                   {{
-                                       Succeeded = false, ErrorCode = {error.errorCode},
-                                       ErrorMessage = ""{error.errorMessage}"",
-                                       Response = response
-                                   }};";
-                                var releaseProperty = $@"
-                               public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response)
-                                   => new()
-                                   {{
-                                       Succeeded = false,
-                                       ErrorCode = {error.errorCode},
-                                       Response = response
-                                   }};";
-                                var errorCodeProperty = $@"
-                                public readonly int {pascalCaseErrorMessage} = {error.errorCode};
-                                ";
-                                errorCodeBuilder.AppendLine(errorCodeProperty);
+                                var debugProperty = ErrorResultsUtils.GenerateGenericDebugErrorResult(genericType, pascalCaseErrorMessage, error);
                                 debugResultsBuilder.AppendLine(debugProperty);
+                                
+                                var releaseProperty = ErrorResultsUtils.GenerateGenericReleaseErrorResult(genericType, pascalCaseErrorMessage, error);
                                 releaseResultsBuilder.AppendLine(releaseProperty);
                             }
+                            
+                            var errorCodeProperty = $@"
+                                public readonly int {pascalCaseErrorMessage} = {error.errorCode};
+                                ";
+                            errorCodeBuilder.AppendLine(errorCodeProperty);
                         }
 
-                        GenerateResultsFactory(errorResultData, ref generatedResultsFactories, context);
-                        GenerateErrorRepository(errorResultData, ref generatedErrorRepositories, context);
-                        GenerateErrorsFactory(errorResultData, ref generatedErrorsFactories, context);
-                        GenerateClassErrorProvider(errorResultData, ref generatedClassErrorProviders, context);
-                        GenerateErrors(errorResultData,
-                            errorCodeBuilder,
+                        ErrorResultsUtils.GenerateResultsFactory(errorResultData, ref generatedResultsFactories, context);
+                        ErrorResultsUtils.GenerateErrorResultsProvider(errorResultData, ref generatedErrorsFactories, context);
+                        ErrorResultsUtils.GenerateErrorResults(errorResultData,
                             debugResultsBuilder,
                             releaseResultsBuilder,
                             context);
+                        GenerateErrorRepository(errorResultData, ref generatedErrorRepositories, context);
+                        GenerateClassErrorProvider(errorResultData, ref generatedClassErrorProviders, context);
                         GenerateMethodErrors(errorResultData, errorCodeBuilder, context);
                     }
                 }
              }
 
             var stats = $@"
-            public class OutputData
+            public class ResultsGenerator_DebugData
             {{
-                 public static string Data = ""Found {syntaxReceiver.DataTypesToGenerate.Count} methods with errors to generate"";
-                 public static string Methods = ""Methods inspected {syntaxReceiver.MethodsInspected.Count}. {String.Join(",", syntaxReceiver.MethodsInspected) }"";
 /* 
 {String.Join(",", debug)} 
 */
@@ -240,83 +211,6 @@ namespace TDS.ResultsGenerator
                 fileName: $"Gen_{data.ErrorRepositoryUid}");
 
             generatedRepositories.Add(data.ErrorRepositoryUid);
-        }
-
-        private void GenerateErrors(ErrorResultData data,
-            StringBuilder errorCodes,
-            StringBuilder debugErrors,
-            StringBuilder releaseErrors,
-            GeneratorExecutionContext context)
-        {
-            //TODO: Add handling for method overrides
-            var resultsClass = $@"
-            using TDS.Results;
-
-            namespace {data.ClassNamespace}
-            {{
-               #if DEBUG
-               
-               public class {data.MethodName}Errors
-               {{
-                   {debugErrors}
-               }}
-            #else
-
-               public class {data.MethodName}Errors
-               {{
-                   {releaseErrors}
-               }}
-            #endif
-            }}
-            ";
-            var fileName = $"Gen_{data.ClassNamespace}_{data.ClassName}_{data.MethodName}_Errors";
-            FormattedFileWriter.WriteSourceFile(context: context,
-                sourceText: resultsClass,
-                fileName: fileName);
-        }
-
-        private void GenerateErrorsFactory(ErrorResultData data, ref HashSet<string> factories, GeneratorExecutionContext context)
-        {
-            if(factories.Contains(data.ErrorsFactoryUid)) return;
-            
-            var errorsFactory = $@"
-            using TDS.Results;
-
-            namespace {data.ClassNamespace}
-            {{
-                public partial class {data.ClassName}ResultsFactory
-                {{
-                    public {data.MethodName}Errors {data.MethodName} => new();
-                }}
-            }}";
-            
-            FormattedFileWriter.WriteSourceFile(context: context,
-                sourceText: errorsFactory,
-                fileName: $"Gen_{data.ErrorsFactoryUid}");
-
-            factories.Add(data.ErrorsFactoryUid);
-        }
-
-        private void GenerateResultsFactory(ErrorResultData data, ref HashSet<string> factories, GeneratorExecutionContext context)
-        {
-            if(factories.Contains(data.ResultsFactoryUid)) return;
-            
-            var resultsFactory = $@"
-            using TDS.Results;
-
-            namespace {data.ClassNamespace}
-            {{
-                public static partial class ResultsFactory
-                {{
-                    public static {data.ClassName}ResultsFactory {data.ClassName} => new();
-                }}
-            }}";
-            
-            FormattedFileWriter.WriteSourceFile(context: context,
-                sourceText: resultsFactory,
-                fileName: $"Gen_{data.ResultsFactoryUid}");
-
-            factories.Add(data.ResultsFactoryUid);
         }
 
         private string GetFullTypeName(ITypeSymbol symbol)

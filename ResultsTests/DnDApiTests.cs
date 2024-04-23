@@ -12,7 +12,7 @@ namespace ResultsTests
 
         public DnDApiTests()
         {
-            OutputData a;
+            ResultsGenerator_DebugData a;
             _d20 = Substitute.For<ID20>();
             _api = new DnDApi(_d20);
         }
@@ -35,7 +35,7 @@ namespace ResultsTests
         {
             Assert.True(
                 _api.CanAttackEnemy(null).ErrorCode == 
-                ErrorCodeRepository.DnDApi.CanAttackEnemy.NoEnemyProvidedErrorCode);
+                ErrorCodeRepository.DnDApi.CanAttackEnemy.NoEnemyProvided);
         }
 
         [Fact]
