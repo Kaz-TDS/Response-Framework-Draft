@@ -11,7 +11,7 @@ namespace ResultsTests.Helpers
         {
             _die = die;
         }
-        
+
         [ErrorResult(errorCode: 1, errorMessage: "No enemy provided")]
         public Result CanAttackEnemy(Enemy enemy)
         {
