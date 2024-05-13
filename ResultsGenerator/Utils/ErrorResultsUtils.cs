@@ -11,12 +11,12 @@ namespace TDS.ResultsGenerator.Utils
         {
             var releaseProperty = $@"
                                 public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response)
-                                => new()
-                                {{
-                                    Succeeded = false,
-                                    ErrorCode = {error.errorCode},
-                                    Response = response
-                                }};";
+                                => new Result<{genericType}>
+                                (
+                                    succeeded: false,
+                                    errorCode: {error.errorCode},
+                                    response: response
+                                );";
             return releaseProperty;
         }
 
@@ -25,13 +25,13 @@ namespace TDS.ResultsGenerator.Utils
         {
             var debugProperty = $@"
                                 public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response)
-                                => new()
-                                {{
-                                    Succeeded = false,
-                                    ErrorCode = {error.errorCode},
-                                    ErrorMessage = ""{error.errorMessage}"",
-                                    Response = response
-                                }};";
+                                => new Result<{genericType}>
+                                (
+                                    succeeded: false,
+                                    errorCode: {error.errorCode},
+                                    errorMessage: ""{error.errorMessage}"",
+                                    response: response
+                                );";
             return debugProperty;
         }
 
@@ -40,11 +40,7 @@ namespace TDS.ResultsGenerator.Utils
         {
             var releaseProperty = $@"
                                 public Result {pascalCaseErrorMessage}
-                                => new()
-                                {{
-                                    Succeeded = false,
-                                    ErrorCode = {error.errorCode},
-                                }};";
+                                => new Result(succeeded: false, errorCode: {error.errorCode});";
             return releaseProperty;
         }
 
@@ -53,12 +49,10 @@ namespace TDS.ResultsGenerator.Utils
         {
             var debugProperty = $@"
                                 public Result {pascalCaseErrorMessage}
-                                => new()
-                                {{
-                                    Succeeded = false,
-                                    ErrorCode = {error.errorCode},
-                                    ErrorMessage = ""{error.errorMessage}"",
-                                }};";
+                                => new Result(succeeded: false,
+                                    errorCode: {error.errorCode},
+                                    errorMessage: ""{error.errorMessage}""
+                                );";
             return debugProperty;
         }
 

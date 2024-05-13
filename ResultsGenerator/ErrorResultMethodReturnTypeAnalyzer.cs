@@ -21,6 +21,7 @@ namespace TDS.ResultsGenerator
         public const string Id = "ResultsFramework_001"; 
         private const string Title = "Invalid return type";
         public const string MessageFormat = "Method '{0}' defines ErrorResult but doesnt return a Result or Result<T> value.";
+        public const string AsyncMessageFormat = "Async method '{0}' defines ErrorResult but doesnt return a Task<Result> or Task<Result<T>> value.";
         private const string Description = "Invalid return type";
 
         internal static DiagnosticDescriptor Rule =
@@ -49,8 +50,26 @@ namespace TDS.ResultsGenerator
             if (declaration.AttributeLists.Any(x => x.Attributes.Any(a => a.Name.ToString() == "ErrorResult")))
             {
                 var returnType = declaration.ReturnType;
-                
-                if(!returnType.ToString().StartsWith("Result"))
+                if (declaration.Modifiers.Any(x => x.Kind() == SyntaxKind.AsyncKeyword))
+                {
+                    if (!returnType.ToString().StartsWith("Task<Result"))
+                    {
+                        var rule = new DiagnosticDescriptor(
+                            Id,
+                            Title,
+                            AsyncMessageFormat,
+                            "stateless",
+                            DiagnosticSeverity.Error,
+                            isEnabledByDefault: true,
+                            description: Description);
+                        context.ReportDiagnostic(
+                            Diagnostic.Create(
+                                rule,
+                                declaration.GetLocation(),
+                                declaration.Identifier.ValueText));
+                    }
+                }
+                else if(!returnType.ToString().StartsWith("Result"))
                 {
                     context.ReportDiagnostic(
                         Diagnostic.Create(

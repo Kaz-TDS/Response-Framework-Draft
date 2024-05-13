@@ -1,4 +1,4 @@
-using ResultsLib;
+using System.Threading.Tasks;
 using TDS.Results;
 
 namespace ResultsTests.Helpers
@@ -64,5 +64,44 @@ namespace ResultsTests.Helpers
         Miss = 2,
         Hit = 7,
         CriticalHit = -2
+    }
+
+    public class AsyncDnDApi
+    {
+        private readonly ID20 _die;
+
+        public AsyncDnDApi(ID20 die)
+        {
+            _die = die;
+        }
+        
+        [ErrorResult(errorCode: 1, errorMessage: "No enemy provided")]
+        [ErrorResult(errorCode: 2, errorMessage: "Invalid enemy Armour Class")]
+        public async Task<Result<AttackResult>> AsyncAttack(Enemy enemy)
+        {
+            await Task.Delay(1000);
+            if (enemy == null)
+            {
+                return ResultsFactory.DnDApi.AttackTheEnemy.NoEnemyProvided(AttackResult.Miss);
+            }
+            
+            if (enemy.ArmourClass < 0)
+            {
+                return ResultsFactory.DnDApi.AttackTheEnemy.InvalidEnemyArmourClass(AttackResult.Miss);
+            }
+
+            var rollResult = _die.Roll();
+
+            var adjustedResult = rollResult - enemy.ArmourClass;
+            var attackResult = adjustedResult switch
+            {
+                < -10 => AttackResult.CriticalMiss,
+                < 0 => AttackResult.Miss,
+                < 10 => AttackResult.Hit,
+                _ => AttackResult.CriticalHit
+            };
+
+            return Result<AttackResult>.Success(attackResult);
+        }
     }
 }

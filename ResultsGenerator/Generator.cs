@@ -42,11 +42,19 @@ namespace TDS.ResultsGenerator
                     var members = typeSymbol.GetMembers();
                     var errors =
                         BuildErrorList(debug, generatorData, members, out var method);
-
+                    
                     var returnType = (INamedTypeSymbol)method.ReturnType;
                     var isGeneric = returnType.IsGenericType;
                     var returnValueType = String.Empty;
-                    if (isGeneric)
+                    if(method.IsAsync)
+                    {
+                        var nestedType = (INamedTypeSymbol) returnType.TypeArguments[0];
+                        if (nestedType.IsGenericType)
+                        {
+                            returnValueType = GetFullTypeName(nestedType.TypeArguments[0]);
+                        }
+                    }
+                    else if (isGeneric)
                     {
                         returnValueType = GetFullTypeName(returnType.TypeArguments[0]);
                         debug.AppendLine($"Generic return - {returnValueType}");
@@ -70,10 +78,11 @@ namespace TDS.ResultsGenerator
                         var errorCodeBuilder = new StringBuilder();
                         var debugResultsBuilder = new StringBuilder();
                         var releaseResultsBuilder = new StringBuilder();
+                        debug.AppendLine("Generating errors");
                         foreach (var error in errorResultData.Errors)
                         {
                             var pascalCaseErrorMessage = StringTools.ToPascalCase(error.errorMessage);
-                            debug.AppendLine($"Generating {pascalCaseErrorMessage} - is generic -> {errorResultData.IsGeneric}");
+                            debug.AppendLine($"Generating {pascalCaseErrorMessage} ({error.errorCode}) - is generic -> {errorResultData.IsGeneric}");
                             
                             if (!errorResultData.IsGeneric)
                             {
@@ -92,7 +101,9 @@ namespace TDS.ResultsGenerator
                                 var releaseProperty = ErrorResultsUtils.GenerateGenericReleaseErrorResult(genericType, pascalCaseErrorMessage, error);
                                 releaseResultsBuilder.AppendLine(releaseProperty);
                             }
-                            
+
+                            debug.AppendLine("Generating the errorCode");
+                                
                             var errorCodeProperty = $@"
                                 public readonly int {pascalCaseErrorMessage} = {error.errorCode};
                                 ";

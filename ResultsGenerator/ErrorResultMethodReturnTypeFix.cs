@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -73,14 +71,38 @@ namespace TDS.ResultsGenerator
         {
             TypeSyntax identifier;
             string source;
-            if (method.ReturnType.ToString() == "void")
+            if (method.Modifiers.Any(x => x.Kind() == SyntaxKind.AsyncKeyword))
             {
-                source = "public Result Placeholder;";
+                string returnType = method.ReturnType.ToString();
+                if (returnType.StartsWith("Task"))
+                {
+                    returnType = returnType.Replace("Task", "");
+                    var startIndex = returnType.IndexOf("<");
+                    var endIndex = returnType.LastIndexOf(">");
+                    var type = returnType.Substring(startIndex + 1, endIndex - startIndex - 1);
+                    returnType = returnType.Replace($"<{type}>", $"{type}");
+                }
+                if (method.ReturnType.ToString() == "void")
+                {
+                    source = "public async Task<Result> Placeholder;";
+                }
+                else
+                {
+                    source = $"public async Task<Result<{returnType}>> Placeholder;";
+                }
             }
             else
             {
-                source = $"public Result<{method.ReturnType}> Placeholder;";
+                if (method.ReturnType.ToString() == "void")
+                {
+                    source = "public Result Placeholder;";
+                }
+                else
+                {
+                    source = $"public Result<{method.ReturnType}> Placeholder;";
+                }
             }
+            
             var testTree = CSharpSyntaxTree.ParseText(source);
                 
             var property = (FieldDeclarationSyntax)testTree.GetRoot().ChildNodes().First();

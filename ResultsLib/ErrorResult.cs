@@ -1,8 +1,12 @@
-namespace ResultsLib;
+using System;
 
-[AttributeUsage(AttributeTargets.Method,AllowMultiple = true)]
-public class ErrorResultAttribute : Attribute
+namespace TDS.Results
 {
-    public ErrorResultAttribute(int errorCode, string errorMessage)
-    {}
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class ErrorResultAttribute : Attribute
+    {
+        public ErrorResultAttribute(int errorCode, string errorMessage)
+        {
+        }
+    }
 }

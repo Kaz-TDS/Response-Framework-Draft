@@ -1,5 +1,6 @@
 using NSubstitute;
 using ResultsTests.Helpers;
+using Xunit;
 
 namespace ResultsTests
 {
@@ -9,8 +10,7 @@ namespace ResultsTests
         private readonly DnDApi _api;
         private readonly Enemy _invalidArmourEnemy = new() { ArmourClass = -1 };
         private readonly Enemy _validEnemy = new() { ArmourClass = 20 };
-        private ResultsGenerator_DebugData _debugData = new();
-
+        
         public DnDApiTests()
         {
             _d20 = Substitute.For<ID20>();
@@ -20,8 +20,7 @@ namespace ResultsTests
         [Fact]
         public void When_Enemy_Provided_CanAttack_Should_Succeed()
         {
-            var enemy = new Enemy();
-            Assert.True(_api.CanAttackEnemy(enemy));
+            Assert.True(_api.CanAttackEnemy(_validEnemy));
         }
 
         [Fact]
@@ -33,8 +32,10 @@ namespace ResultsTests
         [Fact]
         public void When_Null_Provided_CanAttack_Should_Fail_With_Correct_ErrorCode()
         {
+            var result = _api.CanAttackEnemy(null);
+            var message = result.ErrorMessage;
             Assert.True(
-                _api.CanAttackEnemy(null).ErrorCode == 
+                _api.CanAttackEnemy(null).ErrorCode ==
                 ErrorCodeRepository.DnDApi.CanAttackEnemy.NoEnemyProvided);
         }
 
