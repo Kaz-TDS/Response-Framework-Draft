@@ -16,6 +16,7 @@ namespace TDS.ResultsGenerator
     [ExportCodeFixProvider(LanguageNames.CSharp)]
     public class ErrorResultMethodReturnTypeFix : CodeFixProvider
     {
+        private const string EquivalenceKey = "Invalid return type fix";
         public override ImmutableArray<string> FixableDiagnosticIds => 
             ImmutableArray.Create(ErrorResultMethodReturnTypeAnalyzer.Id);
         
@@ -28,7 +29,8 @@ namespace TDS.ResultsGenerator
                 context.RegisterCodeFix(CodeAction.Create(
                     title: "Fix return type",
                     createChangedDocument: c => 
-                        FixReturnTypeAsync(context.Document, diagnostic.Location.SourceSpan, c)),
+                        FixReturnTypeAsync(context.Document, diagnostic.Location.SourceSpan, c),
+                    equivalenceKey: EquivalenceKey),
                     diagnostic);
             }
             return Task.CompletedTask;
