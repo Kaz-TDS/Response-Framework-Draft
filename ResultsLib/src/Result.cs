@@ -3,7 +3,6 @@ using System;
 namespace TDS.Results
 {
 #if DEBUG
-
     public readonly struct Result
     {
         public readonly bool Succeeded;
