@@ -15,6 +15,8 @@ namespace TDS.Results
             ErrorCode = errorCode;
             ErrorMessage = errorMessage;
         }
+        
+        #if RESULT_CALLBACKS
         public Result IfSuccessful(Action handler)
         {
             if(Succeeded) handler?.Invoke();
@@ -26,6 +28,7 @@ namespace TDS.Results
             if (!Succeeded) handler?.Invoke(ErrorCode);
             return this;
         }
+        #endif
 
         public static implicit operator bool(Result r) => r.Succeeded;
 
@@ -54,6 +57,9 @@ namespace TDS.Results
             Response = response;
             ErrorMessage = errorMessage;
         }
+
+        #if RESULT_CALLBACKS
+        
         public Result<T> IfSuccessful(Action<T> handler)
         {
             if(Succeeded) handler?.Invoke(Response);
@@ -65,6 +71,8 @@ namespace TDS.Results
             if (!Succeeded) handler?.Invoke(ErrorCode);
             return this;
         }
+
+        #endif
 
         public static implicit operator bool(Result<T> r) => r.Succeeded;
 
@@ -93,6 +101,7 @@ namespace TDS.Results
             ErrorCode = errorCode;
         }
 
+        #if RESULT_CALLBACKS
         public Result IfSuccessful(Action handler)
         {
             if(Succeeded) handler?.Invoke();
@@ -104,11 +113,12 @@ namespace TDS.Results
             if (!Succeeded) handler?.Invoke(ErrorCode);
             return this;
         }
+        #endif
 
         public static implicit operator bool(Result r) => r.Succeeded;
 
         public static Result Success()
-            => new(succeeded: true, errorCode: -1);
+            => new Result(succeeded: true, errorCode: -1);
 
         public override string ToString()
         {
@@ -144,9 +154,9 @@ namespace TDS.Results
         }
 
         public static implicit operator bool(Result<T> r) => r.Succeeded;
-
-        public static Result<T> Success(T Response)
-            => new Result<T>(Succeeded = true, ErrorCode = -1, Response = response);
+        
+        public static Result<T> Success(T response)
+            => new Result<T>(succeeded: true, errorCode: -1, response: response);
 
         public override string ToString()
         {

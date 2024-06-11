@@ -11,6 +11,7 @@ namespace ResultsTests
         private readonly AsyncDnDApi _asyncApi;
         private readonly Enemy _invalidArmourEnemy = new() { ArmourClass = -1 };
         private readonly Enemy _validEnemy = new() { ArmourClass = 20 };
+        private ResultsGenerator_DebugData a;
         
         public AsyncDnDApiTests()
         {
@@ -28,13 +29,15 @@ namespace ResultsTests
         [Fact]
         public async Task When_Null_Provided_AsyncAttackEnemy_Should_Fail_With_Correct_ErrorCode()
         {
-            (await _asyncApi.AsyncAttack(null))
-                .IfSuccessful(_ => 
-                    Assert.Fail("Async attack should fail if null enemy is provided."))
-                .IfError(errorCode =>
-                {
-                    Assert.True(errorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.NoEnemyProvided);
-                });
+            var result = await _asyncApi.AsyncAttack(null);
+            if (result)
+            {
+                Assert.Fail("Async attack should fail if null enemy is provided.");
+            }
+            else
+            {
+                Assert.True(result.ErrorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.NoEnemyProvided);
+            }
         }
         
         [Fact]
@@ -47,6 +50,48 @@ namespace ResultsTests
         [Fact]
         public async Task When_Enemy_With_Negative_ArmourClass_Provided_AsyncAttackEnemy_Should_Fail_With_Correct_ErrorCode()
         {
+            var result = await _asyncApi.AsyncAttack(_invalidArmourEnemy);
+            if(result.Succeeded)
+            {
+                Assert.Fail("Async attack should fail if enemy has negative ArmourClass.");
+            }
+            else
+            {
+                Assert.True(result.ErrorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.InvalidEnemyArmourClass);
+            }
+        }
+        
+        [Fact]
+        public async Task When_AttackEnemy_Succeeded_And_Roll_Was_Less_Than_10_Response_Should_Be_CriticalMiss()
+        {
+            _d20.Roll().Returns(5);
+            var result = await _asyncApi.AsyncAttack(_validEnemy);
+            if(result.Succeeded)
+            {
+                Assert.True(result.Response == AttackResult.CriticalMiss);
+            }
+            else
+            {
+                Assert.Fail("Expected the attack to succeed when enemy provided is valid.");
+            }
+        }
+
+        #if RESULT_CALLBACKS
+        [Fact]
+        public async Task When_Null_Provided_AsyncAttackEnemy_Should_Fail_With_Correct_ErrorCode_Calbacks()
+        {
+            (await _asyncApi.AsyncAttack(null))
+                .IfSuccessful(_ => 
+                    Assert.Fail("Async attack should fail if null enemy is provided."))
+                .IfError(errorCode =>
+                {
+                    Assert.True(errorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.NoEnemyProvided);
+                });
+        }
+        
+        [Fact]
+        public async Task When_Enemy_With_Negative_ArmourClass_Provided_AsyncAttackEnemy_Should_Fail_With_Correct_ErrorCode_Callbacks()
+        {
             (await _asyncApi.AsyncAttack(_invalidArmourEnemy))
                 .IfSuccessful(_ => 
                     Assert.Fail("Async attack should fail if enemy has negative ArmourClass."))
@@ -57,7 +102,7 @@ namespace ResultsTests
         }
         
         [Fact]
-        public async Task When_AttackEnemy_Succeeded_And_Roll_Was_Less_Than_10_Response_Should_Be_CriticalMiss()
+        public async Task When_AttackEnemy_Succeeded_And_Roll_Was_Less_Than_10_Response_Should_Be_CriticalMiss_Callbacks()
         {
             _d20.Roll().Returns(5);
             (await _asyncApi.AsyncAttack(_validEnemy))
@@ -70,5 +115,6 @@ namespace ResultsTests
                     Assert.Fail("Expected the attack to succeed when enemy provided is valid.");
                 });
         }
+        #endif
     }
 }
