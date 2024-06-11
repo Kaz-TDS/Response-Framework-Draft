@@ -24,7 +24,7 @@ namespace TDS.ResultsGenerator.Utils
             (int errorCode, string errorMessage) error)
         {
             var debugProperty = $@"
-                                public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response)
+                                public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response = default)
                                 => new Result<{genericType}>
                                 (
                                     succeeded: false,
