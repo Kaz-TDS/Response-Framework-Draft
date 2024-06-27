@@ -13,10 +13,13 @@ namespace TDS.ResultsGenerator.Utils
 
             namespace {data.ClassNamespace}
             {{
-               public class {data.MethodName}ErrorCodes
-               {{
-                   {errorCodes}
-               }}
+                public partial class {data.ClassName}ErrorsProvider
+                {{
+                   public class {data.MethodName}ErrorCodes
+                   {{
+                       {errorCodes}
+                   }}
+                }}
             }}
             ";
             var fileName = $"Gen_{data.ClassNamespace}_{data.ClassName}_{data.MethodName}_ErrorCodes";

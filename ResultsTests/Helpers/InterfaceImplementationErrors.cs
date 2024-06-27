@@ -20,6 +20,7 @@ namespace ResultsTests.Helpers
 
     public class InterfaceImplementationCaseTwo : Interface
     {
+        [ErrorResult(errorCode:1, errorMessage:"Bla2")]
         public Result<IEnumerable<bool>> InterfaceMethod(List<string> stuff)
         {
             throw new NotImplementedException();

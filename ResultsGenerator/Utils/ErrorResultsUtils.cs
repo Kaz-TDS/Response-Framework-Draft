@@ -74,19 +74,22 @@ namespace TDS.ResultsGenerator.Utils
 
             namespace {data.ClassNamespace}
             {{
-               #if DEBUG
-               
-               public class {data.MethodName}Errors
-               {{
-                   {debugErrors}
-               }}
-            #else
+                public partial class {data.ClassName}ResultsProvider
+                {{
+                   #if DEBUG
+                   
+                   public class {data.MethodName}Errors
+                   {{
+                       {debugErrors}
+                   }}
+                   #else
 
-               public class {data.MethodName}Errors
-               {{
-                   {releaseErrors}
-               }}
-            #endif
+                   public class {data.MethodName}Errors
+                   {{
+                       {releaseErrors}
+                   }}
+                   #endif
+                }}
             }}
             ";
             var fileName = $"Gen_{data.ClassNamespace}_{data.ClassName}_{data.MethodName}_Errors";
