@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -6,12 +7,15 @@ namespace TDS.ResultsGenerator.Utils
 {
     public static class ErrorResultsUtils
     {
-        public static string GenerateGenericReleaseErrorResult(string genericType, string pascalCaseErrorMessage,
+        public static string GenerateGenericReleaseErrorResult(string genericReturnType, string pascalCaseErrorMessage, List<string> genericParameters,
             (int errorCode, string errorMessage) error)
         {
+            var genericMethodParameters = genericParameters.Count == 0
+                ? String.Empty
+                : $"<{String.Join(",", genericParameters)}>";
             var releaseProperty = $@"
-                                public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response)
-                                => new Result<{genericType}>
+                                public Result<{genericReturnType}> {pascalCaseErrorMessage}{genericMethodParameters}({genericReturnType} response = default)
+                                => new Result<{genericReturnType}>
                                 (
                                     succeeded: false,
                                     errorCode: {error.errorCode},
@@ -20,12 +24,15 @@ namespace TDS.ResultsGenerator.Utils
             return releaseProperty;
         }
 
-        public static string GenerateGenericDebugErrorResult(string genericType, string pascalCaseErrorMessage,
+        public static string GenerateGenericDebugErrorResult(string genericReturnType, string pascalCaseErrorMessage, List<string> genericParameters,
             (int errorCode, string errorMessage) error)
         {
+            var genericMethodParameters = genericParameters.Count == 0
+                ? String.Empty
+                : $"<{String.Join(",", genericParameters)}>";
             var debugProperty = $@"
-                                public Result<{genericType}> {pascalCaseErrorMessage}({genericType} response = default)
-                                => new Result<{genericType}>
+                                public Result<{genericReturnType}> {pascalCaseErrorMessage}{genericMethodParameters}({genericReturnType} response = default)
+                                => new Result<{genericReturnType}>
                                 (
                                     succeeded: false,
                                     errorCode: {error.errorCode},

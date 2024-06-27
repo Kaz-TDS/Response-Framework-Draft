@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using TDS.ResultsGenerator.Utils;
@@ -36,6 +37,7 @@ namespace TDS.ResultsGenerator
             {
                 foreach (var generatorData in syntaxReceiver.DataTypesToGenerate)
                 {
+                    debug.AppendLine($"\nProcessing method - {generatorData.MethodName} - in type {generatorData.MetadataName}");
                     var typeSymbol = context.Compilation.GetTypeByMetadataName(generatorData.MetadataName);
                     if (typeSymbol is null || errorsToGenerate.ContainsKey(generatorData.CombinedName)) continue;
 
@@ -44,24 +46,35 @@ namespace TDS.ResultsGenerator
                         BuildErrorList(debug, generatorData, members, out var method);
                     
                     var returnType = (INamedTypeSymbol)method.ReturnType;
-                    var isGeneric = returnType.IsGenericType;
+                    var isGenericReturnType = returnType.IsGenericType;
+                    var isGenericMethod = method.TypeParameters.Length > 0;
+                    var genericMethodParameters = new List<string>();
+                    if (isGenericMethod)
+                    {
+                        foreach (var parameter in method.TypeParameters)
+                        {
+                            genericMethodParameters.Add(parameter.Name);
+                        }
+
+                        debug.AppendLine($"Generic method parameters - [{string.Join(",", genericMethodParameters)}]");
+                    }
                     var returnValueType = String.Empty;
                     if(method.IsAsync)
                     {
                         var nestedType = (INamedTypeSymbol) returnType.TypeArguments[0];
                         if (nestedType.IsGenericType)
                         {
-                            returnValueType = GetFullTypeName(nestedType.TypeArguments[0]);
+                            returnValueType = GetFullTypeName(nestedType.TypeArguments[0], genericMethodParameters);
                         }
                     }
-                    else if (isGeneric)
+                    else if (isGenericReturnType)
                     {
-                        returnValueType = GetFullTypeName(returnType.TypeArguments[0]);
+                        returnValueType = GetFullTypeName(returnType.TypeArguments[0], genericMethodParameters);
                         debug.AppendLine($"Generic return - {returnValueType}");
                     }
 
                     errorsToGenerate.Add(generatorData.CombinedName,
-                        new ErrorResultData(generatorData, errors, isGeneric, returnValueType));
+                        new ErrorResultData(generatorData, errors, isGenericReturnType, returnValueType, isGenericMethod, genericMethodParameters));
                 }
             }
             catch (Exception e)
@@ -82,9 +95,9 @@ namespace TDS.ResultsGenerator
                         foreach (var error in errorResultData.Errors)
                         {
                             var pascalCaseErrorMessage = StringTools.ToPascalCase(error.errorMessage);
-                            debug.AppendLine($"Generating {pascalCaseErrorMessage} ({error.errorCode}) - is generic -> {errorResultData.IsGeneric}");
+                            debug.AppendLine($"Generating {pascalCaseErrorMessage} ({error.errorCode}) - is generic -> {errorResultData.IsGenericReturnType}");
                             
-                            if (!errorResultData.IsGeneric)
+                            if (!errorResultData.IsGenericReturnType)
                             {
                                 var debugProperty = ErrorResultsUtils.GenerateSimpleDebugErrorResult(pascalCaseErrorMessage, error);
                                 debugResultsBuilder.AppendLine(debugProperty);
@@ -95,10 +108,10 @@ namespace TDS.ResultsGenerator
                             else
                             {
                                 var genericType = errorResultData.ReturnTypeName;
-                                var debugProperty = ErrorResultsUtils.GenerateGenericDebugErrorResult(genericType, pascalCaseErrorMessage, error);
+                                var debugProperty = ErrorResultsUtils.GenerateGenericDebugErrorResult(genericType, pascalCaseErrorMessage, result.Value.GenericParameters, error);
                                 debugResultsBuilder.AppendLine(debugProperty);
                                 
-                                var releaseProperty = ErrorResultsUtils.GenerateGenericReleaseErrorResult(genericType, pascalCaseErrorMessage, error);
+                                var releaseProperty = ErrorResultsUtils.GenerateGenericReleaseErrorResult(genericType, pascalCaseErrorMessage, result.Value.GenericParameters, error);
                                 releaseResultsBuilder.AppendLine(releaseProperty);
                             }
 
@@ -178,13 +191,31 @@ namespace TDS.ResultsGenerator
             return errors;
         }
 
-        private static string GetFullTypeName(ITypeSymbol symbol)
+        private static string GetFullTypeName(ITypeSymbol symbol, List<string> genericParameters = null)
         {
             var output = symbol.Name;
             if(symbol.ContainingType != null)
                 output = $"{symbol.ContainingType.Name}.{output}";
             if (symbol.ContainingNamespace != null)
                 output = $"{String.Join(" - ", symbol.ContainingNamespace.ConstituentNamespaces)}.{output}";
+            var namedSymbol = symbol as INamedTypeSymbol;
+            if (namedSymbol != null && namedSymbol.IsGenericType)
+            {
+                var genericTypes = new List<string>();
+                foreach (var genericType in namedSymbol.TypeArguments)
+                {
+                    if (genericParameters != null && genericParameters.Contains(genericType.Name))
+                    {
+                        genericTypes.Add(genericType.Name);
+                    }
+                    else
+                    {
+                        genericTypes.Add(GetFullTypeName(genericType, genericParameters));
+                    }
+                }
+
+                output = $"{output}<{String.Join(",",genericTypes)}>";
+            }
             return output;
         }
     }

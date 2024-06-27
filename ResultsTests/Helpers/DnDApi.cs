@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TDS.Results;
 
@@ -6,6 +8,7 @@ namespace ResultsTests.Helpers
     public class DnDApi
     {
         private readonly ID20 _die;
+        private ResultsGenerator_DebugData b;
 
         public DnDApi(ID20 die)
         {
@@ -49,6 +52,37 @@ namespace ResultsTests.Helpers
             };
 
             return Result<AttackResult>.Success(attackResult);
+        }
+
+        [ErrorResult(errorCode: 1, errorMessage:"No enemies provided")]
+        [ErrorResult(errorCode: 2, errorMessage:"No instance processor provided")]
+        [ErrorResult(errorCode: 3, errorMessage:"Encountered a null enemy")]
+        public Result<List<T>> ProcessMultipleEnemies<T>(List<Enemy> enemies, Action<Enemy> instanceProcessMethod) where T : struct
+        {
+            if (enemies == null || enemies.Count == 0)
+            {
+                return ResultsFactory.DnDApi.ProcessMultipleEnemies.NoEnemiesProvided(new List<T>());
+            }
+
+            if (instanceProcessMethod == null)
+            {
+                return ResultsFactory.DnDApi.ProcessMultipleEnemies.NoInstanceProcessorProvided(new List<T>());
+            }
+
+            foreach (var enemy in enemies)
+            {
+                if (enemy != null)
+                {
+                    instanceProcessMethod(enemy);
+                }
+
+                if (enemy == null)
+                {
+                    return ResultsFactory.DnDApi.ProcessMultipleEnemies.EncounteredANullEnemy(new List<T>());
+                }
+            }
+            
+            return Result<List<T>>.Success(default);
         }
     }
 
