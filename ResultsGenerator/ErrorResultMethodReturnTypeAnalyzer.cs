@@ -50,9 +50,10 @@ namespace TDS.ResultsGenerator
             if (declaration.AttributeLists.Any(x => x.Attributes.Any(a => a.Name.ToString() == "ErrorResult")))
             {
                 var returnType = declaration.ReturnType;
+                var returnTypeIdentity = returnType.ToString();
                 if (declaration.Modifiers.Any(x => x.Kind() == SyntaxKind.AsyncKeyword))
                 {
-                    if (!returnType.ToString().StartsWith("Task<Result"))
+                    if (!returnTypeIdentity.StartsWith("Task<Result") && !returnTypeIdentity.StartsWith("UniTask<Result"))
                     {
                         var rule = new DiagnosticDescriptor(
                             Id,
@@ -69,7 +70,7 @@ namespace TDS.ResultsGenerator
                                 declaration.Identifier.ValueText));
                     }
                 }
-                else if(!returnType.ToString().StartsWith("Result"))
+                else if(!returnTypeIdentity.StartsWith("Result") && !returnTypeIdentity.StartsWith("UniTask<Result"))
                 {
                     context.ReportDiagnostic(
                         Diagnostic.Create(
