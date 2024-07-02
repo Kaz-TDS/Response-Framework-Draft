@@ -32,8 +32,6 @@ namespace ResultsTests
         [Fact]
         public void When_Null_Provided_CanAttack_Should_Fail_With_Correct_ErrorCode()
         {
-            var result = _api.CanAttackEnemy(null);
-            //var message = result.ErrorMessage;
             Assert.True(
                 _api.CanAttackEnemy(null).ErrorCode ==
                 ErrorCodeRepository.DnDApi.CanAttackEnemy.NoEnemyProvided);

@@ -11,7 +11,6 @@ namespace ResultsTests
         private readonly AsyncDnDApi _asyncApi;
         private readonly Enemy _invalidArmourEnemy = new() { ArmourClass = -1 };
         private readonly Enemy _validEnemy = new() { ArmourClass = 20 };
-        private ResultsGenerator_DebugData a;
         
         public AsyncDnDApiTests()
         {

@@ -8,7 +8,6 @@ namespace ResultsTests.Helpers
     public class DnDApi
     {
         private readonly ID20 _die;
-        private ResultsGenerator_DebugData b;
 
         public DnDApi(ID20 die)
         {
