@@ -13,12 +13,15 @@ namespace TDS.ResultsGenerator.Utils
 
             namespace {data.ClassNamespace}
             {{
-                public partial class {data.ClassName}ErrorsProvider
+                public static partial class ErrorCodeRepository
                 {{
-                   public class {data.MethodName}ErrorCodes
-                   {{
-                       {errorCodes}
-                   }}
+                    public static partial class {data.ClassName}Errors
+                    {{
+                       public static class {data.MethodName}
+                       {{
+                           {errorCodes}
+                       }}
+                    }}
                 }}
             }}
             ";
@@ -37,10 +40,8 @@ namespace TDS.ResultsGenerator.Utils
 
             namespace {data.ClassNamespace}
             {{
-                public partial class {data.ClassName}ErrorsProvider
-                {{
-                    public {data.MethodName}ErrorCodes {data.MethodName} => new();
-                }}
+                public static partial class {data.ClassName}Errors
+                {{}}
             }}";
             
             FormattedFileWriter.WriteSourceFile(context: context,
@@ -61,7 +62,8 @@ namespace TDS.ResultsGenerator.Utils
             {{
                 public static partial class ErrorCodeRepository
                 {{
-                    public static {data.ClassName}ErrorsProvider {data.ClassName} => new();
+                    public static partial class {data.ClassName}Errors
+                    {{}}
                 }}
             }}";
             
