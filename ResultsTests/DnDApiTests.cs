@@ -32,11 +32,9 @@ namespace ResultsTests
         [Fact]
         public void When_Null_Provided_CanAttack_Should_Fail_With_Correct_ErrorCode()
         {
-            var result = _api.CanAttackEnemy(null);
-            //var message = result.ErrorMessage;
             Assert.True(
                 _api.CanAttackEnemy(null).ErrorCode ==
-                ErrorCodeRepository.DnDApi.CanAttackEnemy.NoEnemyProvided);
+                ErrorCodeRepository.DnDApiErrors.CanAttackEnemy.NoEnemyProvided);
         }
 
         [Fact]
@@ -50,7 +48,7 @@ namespace ResultsTests
         {
             Assert.True(
                 _api.AttackTheEnemy(null).ErrorCode ==
-                ErrorCodeRepository.DnDApi.AttackTheEnemy.NoEnemyProvided);
+                ErrorCodeRepository.DnDApiErrors.AttackTheEnemy.NoEnemyProvided);
         }
 
         [Fact]
@@ -64,7 +62,7 @@ namespace ResultsTests
         {
             Assert.True(
                 _api.AttackTheEnemy(_invalidArmourEnemy).ErrorCode ==
-                ErrorCodeRepository.DnDApi.AttackTheEnemy.InvalidEnemyArmourClass);
+                ErrorCodeRepository.DnDApiErrors.AttackTheEnemy.InvalidEnemyArmourClass);
         }
 
         [Fact]

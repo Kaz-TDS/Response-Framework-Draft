@@ -118,7 +118,7 @@ namespace TDS.ResultsGenerator
                             debug.AppendLine("Generating the errorCode");
                                 
                             var errorCodeProperty = $@"
-                                public readonly int {pascalCaseErrorMessage} = {error.errorCode};
+                                public const int {pascalCaseErrorMessage} = {error.errorCode};
                                 ";
                             errorCodeBuilder.AppendLine(errorCodeProperty);
                         }
