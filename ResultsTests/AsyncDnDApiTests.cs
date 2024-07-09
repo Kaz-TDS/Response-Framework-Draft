@@ -35,7 +35,7 @@ namespace ResultsTests
             }
             else
             {
-                Assert.True(result.ErrorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.NoEnemyProvided);
+                Assert.True(result.ErrorCode == ErrorCodeRepository.AsyncDnDApiErrors.AsyncAttack.NoEnemyProvided);
             }
         }
         
@@ -56,7 +56,7 @@ namespace ResultsTests
             }
             else
             {
-                Assert.True(result.ErrorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.InvalidEnemyArmourClass);
+                Assert.True(result.ErrorCode == ErrorCodeRepository.AsyncDnDApiErrors.AsyncAttack.InvalidEnemyArmourClass);
             }
         }
         
@@ -84,7 +84,7 @@ namespace ResultsTests
                     Assert.Fail("Async attack should fail if null enemy is provided."))
                 .IfError(errorCode =>
                 {
-                    Assert.True(errorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.NoEnemyProvided);
+                    Assert.True(errorCode == ErrorCodeRepository.AsyncDnDApiErrors.AsyncAttack.NoEnemyProvided);
                 });
         }
         
@@ -96,7 +96,7 @@ namespace ResultsTests
                     Assert.Fail("Async attack should fail if enemy has negative ArmourClass."))
                 .IfError(errorCode =>
                 {
-                    Assert.True(errorCode == ErrorCodeRepository.AsyncDnDApi.AsyncAttack.InvalidEnemyArmourClass);
+                    Assert.True(errorCode == ErrorCodeRepository.AsyncDnDApiErrors.AsyncAttack.InvalidEnemyArmourClass);
                 });
         }
         
