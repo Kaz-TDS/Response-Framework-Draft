@@ -67,7 +67,7 @@ namespace ResultsTests
             var result = await _asyncApi.AsyncAttack(_validEnemy);
             if(result.Succeeded)
             {
-                Assert.True(result.Response == AttackResult.CriticalMiss);
+                Assert.True(result.Value == AttackResult.CriticalMiss);
             }
             else
             {

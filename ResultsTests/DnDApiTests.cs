@@ -76,7 +76,7 @@ namespace ResultsTests
         {
             _d20.Roll().Returns(5);
             Assert.True(
-                _api.AttackTheEnemy(_validEnemy).Response ==
+                _api.AttackTheEnemy(_validEnemy).Value ==
                 AttackResult.CriticalMiss);
         }
         
@@ -85,7 +85,7 @@ namespace ResultsTests
         {
             _d20.Roll().Returns(15);
             Assert.True(
-                _api.AttackTheEnemy(_validEnemy).Response ==
+                _api.AttackTheEnemy(_validEnemy).Value ==
                 AttackResult.Miss);
         }
         
@@ -94,7 +94,7 @@ namespace ResultsTests
         {
             _d20.Roll().Returns(25);
             Assert.True(
-                _api.AttackTheEnemy(_validEnemy).Response ==
+                _api.AttackTheEnemy(_validEnemy).Value ==
                 AttackResult.Hit);
         }
         
@@ -103,7 +103,7 @@ namespace ResultsTests
         {
             _d20.Roll().Returns(31);
             Assert.True(
-                _api.AttackTheEnemy(_validEnemy).Response ==
+                _api.AttackTheEnemy(_validEnemy).Value ==
                 AttackResult.CriticalHit);
         }
     }

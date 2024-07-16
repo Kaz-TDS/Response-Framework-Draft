@@ -47,14 +47,14 @@ namespace TDS.Results
     {
         public readonly bool Succeeded;
         public readonly int ErrorCode;
-        public readonly T Response;
+        public readonly T Value;
         public readonly string ErrorMessage;
         
-        public Result(bool succeeded, int errorCode, T response, string errorMessage)
+        public Result(bool succeeded, int errorCode, T value, string errorMessage)
         {
             Succeeded = succeeded;
             ErrorCode = errorCode;
-            Response = response;
+            Value = value;
             ErrorMessage = errorMessage;
         }
 
@@ -62,7 +62,7 @@ namespace TDS.Results
         
         public Result<T> IfSuccessful(Action<T> handler)
         {
-            if(Succeeded) handler?.Invoke(Response);
+            if(Succeeded) handler?.Invoke(Value);
             return this;
         }
 
@@ -76,9 +76,9 @@ namespace TDS.Results
 
         public static implicit operator bool(Result<T> r) => r.Succeeded;
 
-        public static Result<T> Success(T response)
+        public static Result<T> Success(T value)
             => new Result<T>(succeeded: true, errorCode: -1,
-                response: response, errorMessage: String.Empty);
+                value: value, errorMessage: String.Empty);
         
         public override string ToString()
         {
@@ -132,18 +132,18 @@ namespace TDS.Results
     {
         public readonly bool Succeeded;
         public readonly int ErrorCode;
-        public readonly T Response;
+        public readonly T Value;
 
-        public Result(bool succeeded, int errorCode, T response)
+        public Result(bool succeeded, int errorCode, T value)
         {
             Succeeded = succeeded;
             ErrorCode = errorCode;
-            Response = response;
+            Value = value;
         }
         
         public Result<T> IfSuccessful(Action<T> handler)
         {
-            if(Succeeded) handler?.Invoke(Response);
+            if(Succeeded) handler?.Invoke(Value);
             return this;
         }
 
@@ -156,7 +156,7 @@ namespace TDS.Results
         public static implicit operator bool(Result<T> r) => r.Succeeded;
         
         public static Result<T> Success(T response)
-            => new Result<T>(succeeded: true, errorCode: -1, response: response);
+            => new Result<T>(succeeded: true, errorCode: -1, value: response);
 
         public override string ToString()
         {
