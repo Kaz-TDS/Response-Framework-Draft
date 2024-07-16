@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace TDS.ResultsGenerator.Utils
+namespace Tripledot.ResultsGenerator.Utils
 {
     public class AttributeUtils
     {

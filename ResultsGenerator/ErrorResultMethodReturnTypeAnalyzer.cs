@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace TDS.ResultsGenerator
+namespace Tripledot.ResultsGenerator
 {
     /// <summary>
     /// Analyzer for reporting syntax node diagnostics.

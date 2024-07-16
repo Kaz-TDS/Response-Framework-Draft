@@ -4,9 +4,9 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text;
 using Microsoft.CodeAnalysis;
-using TDS.ResultsGenerator.Utils;
+using Tripledot.ResultsGenerator.Utils;
 
-namespace TDS.ResultsGenerator
+namespace Tripledot.ResultsGenerator
 {
     [Generator]
     public class Generator : ISourceGenerator

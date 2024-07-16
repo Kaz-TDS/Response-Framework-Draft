@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using TDS.Results;
+using Tripledot.Results;
 
 namespace ResultsTests.Helpers
 {

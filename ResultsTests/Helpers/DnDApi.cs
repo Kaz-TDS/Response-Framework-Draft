@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TDS.Results;
+using Tripledot.Results;
 
 namespace ResultsTests.Helpers
 {

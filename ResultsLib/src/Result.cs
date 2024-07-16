@@ -1,6 +1,6 @@
 using System;
 
-namespace TDS.Results
+namespace Tripledot.Results
 {
 #if DEBUG
     public readonly struct Result

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TDS.ResultsGenerator
+namespace Tripledot.ResultsGenerator
 {
     public class ErrorResultData
     {

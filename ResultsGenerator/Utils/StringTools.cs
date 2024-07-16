@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace TDS.ResultsGenerator.Utils
+namespace Tripledot.ResultsGenerator.Utils
 {
     public static class StringTools
     {

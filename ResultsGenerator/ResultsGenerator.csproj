@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>TDS.ResultsGenerator</RootNamespace>
+    <RootNamespace>Tripledot.ResultsGenerator</RootNamespace>
     <AssemblyName>ResultsGenerator</AssemblyName>
     <LangVersion>8</LangVersion>
   </PropertyGroup>

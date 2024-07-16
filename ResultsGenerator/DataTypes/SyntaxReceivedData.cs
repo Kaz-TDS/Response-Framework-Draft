@@ -1,4 +1,4 @@
-namespace TDS.ResultsGenerator
+namespace Tripledot.ResultsGenerator
 {
     public readonly struct SyntaxReceivedData
     {

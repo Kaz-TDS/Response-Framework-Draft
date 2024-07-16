@@ -1,6 +1,6 @@
 using System;
 
-namespace TDS.Results
+namespace Tripledot.Results
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class ErrorResultAttribute : Attribute

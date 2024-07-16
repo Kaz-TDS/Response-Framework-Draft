@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace TDS.ResultsGenerator.Utils
+namespace Tripledot.ResultsGenerator.Utils
 {
     public static class FormattedFileWriter
     {

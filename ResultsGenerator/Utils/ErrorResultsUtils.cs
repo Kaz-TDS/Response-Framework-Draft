@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
-namespace TDS.ResultsGenerator.Utils
+namespace Tripledot.ResultsGenerator.Utils
 {
     public static class ErrorResultsUtils
     {
@@ -14,12 +14,12 @@ namespace TDS.ResultsGenerator.Utils
                 ? String.Empty
                 : $"<{String.Join(",", genericParameters)}>";
             var releaseProperty = $@"
-                                public Result<{genericReturnType}> {pascalCaseErrorMessage}{genericMethodParameters}({genericReturnType} response = default)
+                                public Result<{genericReturnType}> {pascalCaseErrorMessage}{genericMethodParameters}({genericReturnType} value = default)
                                 => new Result<{genericReturnType}>
                                 (
                                     succeeded: false,
                                     errorCode: {error.errorCode},
-                                    response: response
+                                    value: value
                                 );";
             return releaseProperty;
         }
@@ -31,13 +31,13 @@ namespace TDS.ResultsGenerator.Utils
                 ? String.Empty
                 : $"<{String.Join(",", genericParameters)}>";
             var debugProperty = $@"
-                                public Result<{genericReturnType}> {pascalCaseErrorMessage}{genericMethodParameters}({genericReturnType} response = default)
+                                public Result<{genericReturnType}> {pascalCaseErrorMessage}{genericMethodParameters}({genericReturnType} value = default)
                                 => new Result<{genericReturnType}>
                                 (
                                     succeeded: false,
                                     errorCode: {error.errorCode},
                                     errorMessage: ""{error.errorMessage}"",
-                                    response: response
+                                    value: value
                                 );";
             return debugProperty;
         }
@@ -70,7 +70,7 @@ namespace TDS.ResultsGenerator.Utils
         {
             //TODO: Add handling for method overrides
             var resultsClass = $@"
-            using TDS.Results;
+            using Tripledot.Results;
 
             namespace {data.ClassNamespace}
             {{
@@ -103,7 +103,7 @@ namespace TDS.ResultsGenerator.Utils
             if(factories.Contains(data.ErrorsFactoryUid)) return;
             
             var errorsFactory = $@"
-            using TDS.Results;
+            using Tripledot.Results;
 
             namespace {data.ClassNamespace}
             {{
@@ -125,7 +125,7 @@ namespace TDS.ResultsGenerator.Utils
             if(factories.Contains(data.ResultsFactoryUid)) return;
             
             var resultsFactory = $@"
-            using TDS.Results;
+            using Tripledot.Results;
 
             namespace {data.ClassNamespace}
             {{

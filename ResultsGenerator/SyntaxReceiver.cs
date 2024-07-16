@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using TDS.ResultsGenerator.Utils;
+using Tripledot.ResultsGenerator.Utils;
 
-namespace TDS.ResultsGenerator
+namespace Tripledot.ResultsGenerator
 {
     public class SyntaxReceiver : ISyntaxReceiver
     {

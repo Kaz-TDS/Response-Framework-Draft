@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace TDS.ResultsGenerator.Utils
+namespace Tripledot.ResultsGenerator.Utils
 {
     public static class SyntaxUtils
     {

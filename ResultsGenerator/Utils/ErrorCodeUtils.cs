@@ -2,14 +2,14 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.CodeAnalysis;
 
-namespace TDS.ResultsGenerator.Utils
+namespace Tripledot.ResultsGenerator.Utils
 {
     public static class ErrorCodeUtils
     {
         public static void GenerateMethodErrors(ErrorResultData data, StringBuilder errorCodes, GeneratorExecutionContext context)
         {
             var resultsClass = $@"
-            using TDS.Results;
+            using Tripledot.Results;
 
             namespace {data.ClassNamespace}
             {{
@@ -36,7 +36,7 @@ namespace TDS.ResultsGenerator.Utils
             if(generatedErrorProviders.Contains(data.ClassErrorsProviderUid)) return;
             
             var errorsFactory = $@"
-            using TDS.Results;
+            using Tripledot.Results;
 
             namespace {data.ClassNamespace}
             {{
@@ -56,7 +56,7 @@ namespace TDS.ResultsGenerator.Utils
             if(generatedRepositories.Contains(data.ErrorRepositoryUid)) return;
             
             var resultsFactory = $@"
-            using TDS.Results;
+            using Tripledot.Results;
 
             namespace {data.ClassNamespace}
             {{

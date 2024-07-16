@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Text;
 using Document = Microsoft.CodeAnalysis.Document;
 
-namespace TDS.ResultsGenerator
+namespace Tripledot.ResultsGenerator
 {
     [ExportCodeFixProvider(LanguageNames.CSharp)]
     public class ErrorResultMethodReturnTypeFix : CodeFixProvider
